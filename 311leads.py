@@ -157,3 +157,4 @@ with st.spinner("Buscando clientes..."):
             file_name = f"información_{cliente.industria}.txt",
             mime = "text/plain"
         )
+
