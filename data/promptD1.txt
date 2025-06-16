@@ -6,13 +6,14 @@ Estoy abierto a trabajar con empresas, instituciones o incluso consumidores indi
 Me interesa:
 
 1. Hacer una exploración de mercado para detectar oportunidades.
-2. Definir a qué tipo de clientes podría apuntar en {industria}, tamaño, {zona}.
+2. Definir a qué tipo de clientes podría apuntar en {industria}, en {zona}.
 3. Generar una lista de prospectos REALES calificados en función de esa investigación.
 4. Definir una estrategia para contactarlos (LinkedIn, correo, llamadas, etc.).
 
 Toda esa información la necesito en un formato de tabla donde pueda ver claramente el medio de contacto,
-ya sea por telefono o correo electrónico, que ambos tienen que ser verídicos y ya verificados para poder 
-ponerme en contacto con las personas responsables lo más pronto posible.
-Además de una breve descrpción de quienes son y a lo que se dedican.
+ya sea por telefono o correo electrónico, que ambos tienen que ser verídicos y ya verificados, además de una direacción
+en caso de que los leads tengan algún lugar físico para visitar, para poder 
+ponerme en contacto con las personas responsables lo más pronto posible. Agrega también el nombre de los encargados
+Además de una breve descripción de quienes son y a lo que se dedican.
 
 Algo importante es que no deberás agregar al final ningún comentario o sugerencia, por favor
