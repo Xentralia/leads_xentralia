@@ -1,1 +1,54 @@
 ## Notas
+
+== Python
+"""
+
+def agente2(prompt):
+    try:
+        agente2 = client.responses.create(
+        model= "gpt-4.1",
+        input= prompt
+        )
+        return agente2.output_text
+
+    except Exception as e:
+        st.error(f"Prompt de busqueda inválido: {str(e)}")
+        return None
+
+def agente3(respuesta2):
+    try:
+        agente3 = client.responses.create(
+        model= "gpt-4.1",
+        input= f"Si la información de {respuesta2} no es suficientemente en cantidad o detalle, optimizala para encontrar leads, segmetarlos y entregame solamente el prompt neceario para generar leads basado en esa información"
+        )
+        return agente3.output_text
+
+    except Exception as e:
+        st.error(f"xdxdxd: {str(e)}")
+        return None
+
+def agente4(prompt2):
+    try:
+        agente4 = client.responses.create(
+        model= "gpt-4.1",
+        input = f"Dame solamente los leads, con un formato de directorio, donde me digas los correos o numeros de contacto de cada lead, además de una descrpción muy breve de quienes son, basado en {prompt2} y no hagas preguntas finales, ni sugerencias. Además dame datos completamente verídicos y nada genérico"
+        )
+        return agente4.output_text
+    
+    except Exception as e:
+        st.error(f"Error al encontrar los clientes: {str(e)}")
+        return None
+"""
+
+            #p2 = agente2(p1)                                #
+            #p3 = agente3(p2)                                #
+            #p4 = agente4(p3)                                #
+
+
+
+== Prompts viejos
+Dame únicamente el prompt necesario para poder 
+buscar información de clientes potenciales en {cliente.industria} 
+que sean similares a {cliente.postores} 
+y tengan como producto {cliente.producto} 
+en {cliente.zona}.
