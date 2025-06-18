@@ -7,8 +7,9 @@
 # V.3.1.7 //23 05 2025//                          #
 # V.3.2.7 //          //                          #
 # V.3.3.8 //13 06 2025//                          #
-# Desplegado con streamlit                        #
-# Agentes impulsados con OpenAI                   #
+# V.3.5.9 //16 06 2025//                          #
+# Desplegado con streamlit y render               #
+# Agente impulsado con OpenAI                     #
 # Desarrollador: Sergio Emiliano López Bautista   #
 ###################################################
 
@@ -47,18 +48,17 @@ st.title("📝 Generador de directorio de clientes potenciales")
 
 # --------------------------- Funciones -----------------------------------------------
 def agente(cliente):
-    datos = vars(cliente)
+    datos = vars(cliente) #Esta línea cambia la clase cliente a un diccionario
     try:
-        agente1 = client.responses.create(
+        agente = client.responses.create(
             model = "gpt-4.1",
             input = construir_prompt("data/promptD1.txt", datos)
         )
-        return agente1.output_text
+        return agente.output_text
     
     except Exception as e:
         st.error(f"Error al generar una respuesta: {str(e)}")
         return None
-
 
 def maquina_de_escribir(respuesta):
     for word in respuesta.split(" "):
@@ -71,7 +71,6 @@ def instrucciones():
     file = fi.split('\n')
     for linea in file:
         st.markdown(linea)
-
 
 # -------------------------------- Interfaz (MAIN)-----------------------------------------
 p4 = None

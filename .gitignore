@@ -1,2 +1,4 @@
 .env
 notas.txt
+*.pyc
+_pychache_/
