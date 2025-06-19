@@ -52,7 +52,7 @@ def agente(cliente):
     try:
         agente = client.responses.create(
             model = "gpt-4.1",
-            input = construir_prompt("data/promptD1.txt", datos)
+            input = construir_prompt("data/promptD2.txt", datos)
         )
         return agente.output_text
     
@@ -95,7 +95,7 @@ with st.sidebar:
         pos = st.text_input("¿A quiénes les vendes?",
                             placeholder="Ej: Seguidores de instagram, Mayoristas, Samunsung")
         prod = st.text_input("¿Qué vendes?",
-                             placeholder="Ej: Pan, reguladores, etiquetas, diseños")
+                            placeholder="Ej: Pan, reguladores, etiquetas, diseños")
         zona = st.text_input("¿En qué zona buscas clientes?", 
                             placeholder="Ej: CDMX, Valle de México, Peninsula de Yucatan")
         #--------------------------------------------------------------
