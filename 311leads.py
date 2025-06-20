@@ -34,7 +34,7 @@ class Cliente:
         self.zona = zona
 
 # --------------------------- Seteadores ----------------------------------------------
-st.set_page_config(page_title = "Generador de diccionario",
+st.set_page_config(page_title = "Generador de diccionario V.3.5.10",
                    page_icon = "📝",
                    layout="wide")
 
