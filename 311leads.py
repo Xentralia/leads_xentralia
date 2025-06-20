@@ -52,7 +52,7 @@ def agente(cliente):
     try:
         agente = client.responses.create(
             model = "gpt-4.1",
-            input = construir_prompt("data/promptD2.txt", datos)
+            input = construir_prompt("data/promptD1.txt", datos)
         )
         return agente.output_text
     
