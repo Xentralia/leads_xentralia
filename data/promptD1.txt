@@ -10,7 +10,7 @@ Me interesa:
 3. Generar una lista de prospectos REALES calificados en función de esa investigación.
 4. Definir una estrategia para contactarlos (LinkedIn, correo, llamadas, etc.).
 
-Toda esa información la necesito en un formato de tabla donde pueda ver claramente el medio de contacto,
+Toda esa información la necesito como datos que se puedan poner en un documento .csv donde pueda ver claramente el medio de contacto,
 ya sea por telefono o correo electrónico, que ambos tienen que ser verídicos y ya verificados, además de una direacción
 en caso de que los leads tengan algún lugar físico para visitar, para poder 
 ponerme en contacto con las personas responsables lo más pronto posible. Agrega también el nombre de los encargados
