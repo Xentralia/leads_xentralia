@@ -1,14 +1,2 @@
-Eres un lead generation specialist, growth marketer y yo tengo una empresa en la industria {industria}.
-Estoy buscando tener un perfil de clientes ideales.
-Lo que ofrezco es {producto} y suelo venderle a {postores}.
-
-Estoy abierto a trabajar con empresas, instituciones o incluso consumidores individuales, en {zona}.
-
-Me interesa:
-
-1. Tener una industria clara
-2. Un perfil segmentado de los clientes 
-
-Toda esa información la necesito en un formato de tabla, además de una breve descripción de quienes son y a lo que se dedican.
-
-Algo importante es que no deberás agregar al final ningún comentario o sugerencia, por favor
+Genera una única frase tipo búsqueda de Google que describa a mi cliente ideal para introducirlo en el parametro q de la estructura de la busqueda con SerpApi. 
+Toma en cuenta que estoy en la industria {industria}, vendo {producto}, mis clientes actuales son {postores} y opero en {zona}.
