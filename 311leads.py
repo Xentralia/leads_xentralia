@@ -29,7 +29,7 @@ from serpapi import GoogleSearch
 
 
 # --------------------------- Seteadores ----------------------------------------------
-st.set_page_config(page_title = "Generador de diccionario V.3.5.10",
+st.set_page_config(page_title = "X Leadflow V.3.5.10",
                    page_icon = "📝",
                    layout="wide")
 
@@ -37,7 +37,6 @@ dotenv_path = find_dotenv()
 load_dotenv(dotenv_path, override=True)
 client = OpenAI(api_key = os.getenv("OPENAI_API_KEY"))
 explorador = os.getenv("SERPAPI_API_KEY")
-print(explorador)
 #client = OpenAI(api_key = st.secrets["OPENAI_API_KEY"])
 #comentario generico
 
@@ -76,7 +75,6 @@ def buscador(query):
         }
         search = GoogleSearch(params)
         results = search.get_dict()
-        #places = results.get("local_results", {}).get("places", [])
         organicos = results.get("organic_results", [])
 
         return organicos
@@ -84,17 +82,29 @@ def buscador(query):
     except Exception as e:
         st.error(f"No se pudo completar la busqueda: {str(e)}")
         return None
+    
+def escritor(csv):
+    try:
+        escribano = client.responses.create(
+            model="gpt-4.1",
+            input=f"Toma los datos de {csv} y dame solamente un dataframe listo para poder usarlo"
+        )
+
+        st.write_stream(maquina_de_escribir(escribano.output_text))
+
+    except Exception as e:
+        st.error('No se logró desplegar la vista previa de la información')
 
 def maquina_de_escribir(respuesta):
     for word in respuesta.split(" "):
         yield word + " "
-        time.sleep(0.02)
+        time.sleep(0.01)
 
 def csv_maker(p4):
     print("xd")
     salida = io.StringIO()
     writer = csv.writer(salida)
-    writer.writerow(["Nombre", "Dirección", "Teléfono", "Sitio web", "Rating"])
+    writer.writerow(["Rating", "Sitio web", "link", "sitelinks"])
 
     for campo in p4:
         writer.writerow([
@@ -105,8 +115,6 @@ def csv_maker(p4):
         ])
     return salida.getvalue()
     
-
-
 def instrucciones():
     with codecs.open("data/instrucciones.txt", "r", encoding="utf-8") as f:
         fi = f.read()
@@ -150,10 +158,9 @@ if usuario:
             cliente = Cliente(ind, pos, prod, zona)         #1
             p4 = buscador(agente(cliente))                  #2
             st.success("Clientes potenciales encontrados")  #3
-
+            csv = csv_maker(p4)
             st.markdown("### Vista previa de la información")
-            #st.write_stream(maquina_de_escribir(p4))
-            #st.markdown(p4)
+            escritor(csv)
 
     elif pos == None or prod == None or zona == None:
         st.warning("Por favor completa los campos requeridos")
@@ -166,7 +173,6 @@ if usuario:
             mime = "text/plain"
         )
 
-        csv = csv_maker(p4)
         st.download_button(
             label = "Descargar CSV",
             data = csv,
