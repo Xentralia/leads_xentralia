@@ -21,7 +21,10 @@ import os
 import csv
 import time
 import codecs
+import requests
 import streamlit as st
+import pandas as pd
+from bs4 import BeautifulSoup
 from dotenv import load_dotenv, find_dotenv
 from openai import OpenAI
 from utils.prompts import construir_prompt #Esto toma el archivo de prompts.py
@@ -64,19 +67,22 @@ def agente(cliente):
         st.error(f"Error al generar una respuesta: {str(e)}")
         return None
     
-def buscador(query):
+def buscador(query, paginas=10):
+    organicos=[]
     try:
-        params = {
-            "engine": "google",
-            "q": query,
-            "hl": "es",
-            "google_domain": "google.com.mx",
-            "api_key": explorador
-        }
-        search = GoogleSearch(params)
-        results = search.get_dict()
-        organicos = results.get("organic_results", [])
-
+        for i in range(paginas):
+            params = {
+                "engine": "google",
+                "q": query,
+                "start": i*10, #Esto usa más páginas en el buscador
+                "hl": "es",
+                "google_domain": "google.com.mx",
+                "api_key": explorador
+            }
+            search = GoogleSearch(params)
+            results = search.get_dict()
+            organicos += results.get("organic_results", [])
+            time.sleep(1) #Esto evita que se trabe, aunque no estoy seguro por qué
         return organicos
     
     except Exception as e:
@@ -122,61 +128,96 @@ def instrucciones():
     for linea in file:
         st.markdown(linea)
 
-# -------------------------------- Interfaz (MAIN)-----------------------------------------
-p4 = None
-cliente = Cliente(None, None, None, None)
+def enriquecer(link):
+    try:
+        response = requests.get(link, timeout=10)
+        soup = BeautifulSoup(response.text, "html.parser")
+        texto = soup.get_text()[:3000]
 
+        prompt = f"""
+        Este es el contenido parcial de la página web de una empresa:
+
+        {texto}
+
+        Extrae, si es posible:
+        - Nombre del negocio
+        - Número de teléfono
+        - Correo electrónico de contacto
+        - Nombre de persona de contacto (si está disponible)
+
+        Devuelve la información como:
+        Nombre: ...
+        Teléfono: ...
+        Correo: ...
+        Contacto: ...
+        """
+
+        completador = client.responses.create(
+            model = "gpt-4.1",
+            input = prompt
+        )
+        return completador.output_text
+    
+    except Exception as e:
+        return f"Error: {e}"
+    
+def parsear(respuesta): #gpt a diccionario
+    datos = {"Nombre": "", "Teléfono": "", "Correo": "", "Contacto": ""}
+
+    for linea in respuesta.split("\n"):
+        if ":" in linea:
+            clave, valor = linea.split(":", 1)
+            if clave.strip() in datos:
+                datos[clave.strip()] = valor.strip()
+    return datos
+
+def tabla(leads):
+    tab = []
+    progreso = st.progress(0)
+
+    for i, r in enumerate(leads):
+        link = r.get("link", "")
+        rico = enriquecer(link)
+        datos = parsear(rico)
+        datos["Enlace"] = link
+        tab.append(datos)
+        progreso.progress((i + 1) / len(leads))
+
+    return pd.DataFrame(tab)
+
+# -------------------------------- Interfaz (MAIN)-----------------------------------------
 st.markdown("## ¡Bienvenido!")
 instrucciones()
 
-with st.sidebar:
-    st.header("Ayudame proporcionandome esta información:")
+st.sidebar.header("Ayudame proporcionandome esta información:")
 
-    st.markdown("¿En qué industria estás?")
-    ind = st.radio(
-        "Selecciona una opción",
-        ["Manufactura", "Alimenticia", "Automotriz", "Textil", "Tecnológica", "Otra"],
-        )
-    if ind == "Otra":
-        ind = st.text_input("¿En qué industria estás?")
+#---------------------------------------------------------------------------
+industria = st.sidebar.selectbox("Industria:", ["Manufactura", "Alimenticia", "Automotriz", "Textil", "Tecnológica", "Otra"])
+if industria == "Otra":
+    industria = st.sidebar.text_input("Especifique la industria:")
+#---------------------------------------------------------------------------   
+postores = st.sidebar.text_input("¿A quiénes les vendes?")
+producto = st.sidebar.text_input("¿Qué vendes?")
+zona = st.sidebar.text_input("¿En qué zona buscas clientes?")
+#---------------------------------------------------------------------------
 
-    with st.form("form", border=False):
-        #--------------------------------------------------------------
-        pos = st.text_input("¿A quiénes les vendes?",
-                            placeholder="Ej: Seguidores de instagram, Mayoristas, Samunsung")
-        prod = st.text_input("¿Qué vendes?",
-                            placeholder="Ej: Pan, reguladores, etiquetas, diseños")
-        zona = st.text_input("¿En qué zona buscas clientes?", 
-                            placeholder="Ej: CDMX, Valle de México, Peninsula de Yucatan")
-        #--------------------------------------------------------------
-        usuario = st.form_submit_button("Aceptar")
+if st.sidebar.button("Buscar clientes"):
+    if all([industria, postores, producto, zona]):
+        with st.spinner("Buscando leads..."):
+            cliente = Cliente(industria, postores, producto, zona)
+            query = agente(cliente)
+            if query:
+                leads = buscador(query)
+                #st.markdown(leads)
+                df = tabla(leads)
+                st.success("Clientes potenciales encontrados")
+                st.dataframe(df)
 
-
-if usuario:
-    if ind or pos or prod or zona:
-        with st.spinner("Buscando clientes..."):
-            cliente = Cliente(ind, pos, prod, zona)         #1
-            p4 = buscador(agente(cliente))                  #2
-            st.success("Clientes potenciales encontrados")  #3
-            csv = csv_maker(p4)
-            st.markdown("### Vista previa de la información")
-            escritor(csv)
-
-    elif pos == None or prod == None or zona == None:
-        st.warning("Por favor completa los campos requeridos")
-                         
-    if p4 != None:
-        st.download_button(
-            label = "Descargar txt",
-            data = str(p4),
-            file_name = f"información_{cliente.industria}.txt",
-            mime = "text/plain"
-        )
-
-        st.download_button(
-            label = "Descargar CSV",
-            data = csv,
-            file_name = f"información_{cliente.industria}.csv",
-            mime = "text/csv"
-        )
-
+                st.download_button(
+                    label="Descargar CSV",
+                    data=df.to_csv(index=False),
+                    file_name="leads_enriquecidos.csv",
+                    mime="text/csv"
+                )
+    else:
+        st.warning("Por favor completa todos los campos.")

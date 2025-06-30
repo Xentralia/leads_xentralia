@@ -45,6 +45,73 @@ def agente4(prompt2):
             #p4 = agente4(p3)                                #
 
 
+..........................................................................
+p4 = None
+cliente = Cliente(None, None, None, None)
+
+st.markdown("## ¡Bienvenido!")
+instrucciones()
+
+with st.sidebar:
+    st.header("Ayudame proporcionandome esta información:")
+
+    st.markdown("¿En qué industria estás?")
+    ind = st.radio(
+        "Selecciona una opción",
+        ["Manufactura", "Alimenticia", "Automotriz", "Textil", "Tecnológica", "Otra"],
+        )
+    if ind == "Otra":
+        ind = st.text_input("¿En qué industria estás?")
+
+    with st.form("form", border=False):
+        #--------------------------------------------------------------
+        pos = st.text_input("¿A quiénes les vendes?",
+                            placeholder="Ej: Seguidores de instagram, Mayoristas, Samunsung")
+        prod = st.text_input("¿Qué vendes?",
+                            placeholder="Ej: Pan, reguladores, etiquetas, diseños")
+        zona = st.text_input("¿En qué zona buscas clientes?", 
+                            placeholder="Ej: CDMX, Valle de México, Peninsula de Yucatan")
+        #--------------------------------------------------------------
+        usuario = st.form_submit_button("Aceptar")
+
+
+if usuario:
+    if ind or pos or prod or zona:
+        with st.spinner("Buscando clientes..."):
+            cliente = Cliente(ind, pos, prod, zona)         #1
+            p4 = buscador(agente(cliente))                  #2
+            st.success("Clientes potenciales encontrados")  #3
+            csv = csv_maker(p4)
+            st.markdown("### Vista previa de la información")
+            escritor(csv)
+
+    elif pos == None or prod == None or zona == None:
+        st.warning("Por favor completa los campos requeridos")
+                         
+    if p4 != None:
+        st.download_button(
+            label = "Descargar txt",
+            data = str(p4),
+            file_name = f"información_{cliente.industria}.txt",
+            mime = "text/plain"
+        )
+
+        st.download_button(
+            label = "Descargar CSV",
+            data = csv,
+            file_name = f"información_{cliente.industria}.csv",
+            mime = "text/csv"
+        )
+
+
+
+
+
+
+
+
+
+
 
 == Prompts viejos
 Dame únicamente el prompt necesario para poder 
@@ -52,3 +119,4 @@ buscar información de clientes potenciales en {cliente.industria}
 que sean similares a {cliente.postores} 
 y tengan como producto {cliente.producto} 
 en {cliente.zona}.
+
