@@ -14,7 +14,6 @@
 # Desarrollador: Sergio Emiliano López Bautista   #
 # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-
 # ------------------------- Requerimentos y librerías -------------------------------
 import io
 import os
