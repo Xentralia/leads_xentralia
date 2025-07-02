@@ -31,7 +31,7 @@ from utils.prompts import construir_prompt #Esto toma el archivo de prompts.py
 from serpapi import GoogleSearch
 
 # --------------------------- Seteadores ----------------------------------------------
-st.set_page_config(page_title = "X Leadflow V.3.5.10",
+st.set_page_config(page_title = "X Leadflow V.3.12.16",
                    page_icon = "📝",
                    layout="wide")
 
@@ -103,31 +103,16 @@ def enriquecer(link):
 
         correos = re.findall(r"[\w\.-]+@[\w\.-]+\\.\w+", texto)
         telefonos = re.findall(r"\+?\d[\d\s\-]{7,}\d", texto)
-
-        prompt = f"""
-        Este es el contenido parcial de la página web de una empresa:
-
-        {texto}
-
-        Tu tarea es encontrar y extraer SOLO si están disponibles:
-        - Nombre del negocio
-        - Número de teléfono
-        - Correo electrónico de contacto
-        - Nombre de una persona de contacto
-
-        Devuélvelo EXACTAMENTE en este formato:
-
-        Nombre: [nombre]
-        Teléfono: [teléfono]
-        Correo: [email]
-        Contacto: [persona]
-
-        Si alguno no está disponible, escribe: -
-        """
+        
+        textoD = {
+            "contenido": texto,
+            "emails": correos,
+            "telefonos": telefonos
+        }
 
         completador = client.responses.create(
             model = "gpt-4.1",
-            input = prompt
+            input = construir_prompt("data/promptD3.txt", textoD)
         )
         return completador.output_text
 

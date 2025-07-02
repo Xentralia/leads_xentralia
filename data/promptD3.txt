@@ -1,0 +1,21 @@
+Este es el contenido parcial de la página web de una empresa:
+
+{contenido}
+
+correos detectados: {emails}
+telefonos detectados: {telefonos}
+
+Tu tarea es encontrar y extraer SOLO si están disponibles:
+    - Nombre del negocio
+    - Número de teléfono
+    - Correo electrónico de contacto
+    - Nombre de una persona de contacto
+
+Devuélvelo EXACTAMENTE en este formato:
+
+    Nombre: [nombre]
+    Teléfono: [teléfono]
+    Correo: [email]
+    Contacto: [persona]
+
+Si alguno no está disponible, escribe: -
