@@ -67,10 +67,11 @@ def agente(cliente):
 def buscador(query, paginas=10):
     organicos=[]
     try:
+        consulta = f'site:linkedin.com/in/ {query} "{cliente.producto}" "{cliente.zona}"'
         for i in range(paginas):
             params = {
                 "engine": "google",
-                "q": query,
+                "q": consulta,
                 "start": i*10,
                 "hl": "es",
                 "google_domain": "google.com.mx",
