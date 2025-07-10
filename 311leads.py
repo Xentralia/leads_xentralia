@@ -10,6 +10,7 @@
 # V.3.5.9 //16 06 2025//                          #
 # V.3.5.10 //20 06 2025//                         #
 # V.3.12.16 //02 07 2025//                        #
+# V.3.14.16 //02 07 2025//                        #
 # Desplegado con streamlit y render               #
 # Agente impulsado con OpenAI                     #
 # Desarrollador: Sergio Emiliano López Bautista   #
@@ -32,7 +33,7 @@ from utils.prompts import construir_prompt #Esto toma el archivo de prompts.py
 from serpapi import GoogleSearch
 
 # --------------------------- Seteadores ----------------------------------------------
-st.set_page_config(page_title = "X Leadflow V.3.12.16",
+st.set_page_config(page_title = "X Leadflow V.π",
                    page_icon = "📝",
                    layout="wide")
 
@@ -41,9 +42,9 @@ load_dotenv(dotenv_path, override=True)
 client = OpenAI(api_key = os.getenv("OPENAI_API_KEY"))
 explorador = os.getenv("SERPAPI_API_KEY")
 
-st.title("📝 Generador de directorio de clientes potenciales")
+st.title("📝 Directorio de clientes potenciales")
 
-# ------------------------------ Estructuras ----------------------------------------
+# ------------------------------ Estructuras -----------------------------------------
 class Cliente:
     def __init__(self, industria, postores, producto, zona):
         self.industria = industria
@@ -52,12 +53,19 @@ class Cliente:
         self.zona = zona
 
 # --------------------------- Funciones -----------------------------------------------
+def instrucciones():
+    with codecs.open("data/instrucciones.txt", "r", encoding="utf-8") as f:
+        fi = f.read()
+    file = fi.split('\n')
+    for linea in file:
+        st.markdown(linea)
+
 def agente(cliente):
     datos = vars(cliente)
     try:
         agente = client.responses.create(
             model = "gpt-4.1",
-            input = construir_prompt("data/promptD2.txt", datos)
+            input = construir_prompt("data/promptD4.txt", datos)
         )
         return agente.output_text
     except Exception as e:
@@ -85,13 +93,6 @@ def buscador(query, paginas=10):
     except Exception as e:
         st.error(f"No se pudo completar la busqueda: {str(e)}")
         return None
-
-def instrucciones():
-    with codecs.open("data/instrucciones.txt", "r", encoding="utf-8") as f:
-        fi = f.read()
-    file = fi.split('\n')
-    for linea in file:
-        st.markdown(linea)
 
 def enriquecer(link):
     try:
@@ -157,24 +158,22 @@ postores = st.sidebar.text_input("¿A quiénes les vendes?")
 producto = st.sidebar.text_input("¿Qué vendes?")
 zona = st.sidebar.text_input("¿En qué zona buscas clientes?")
 
-if st.sidebar.button("Buscar clientes"):
+if st.sidebar.button("Aceptar"):
     if all([industria, postores, producto, zona]):
-        with st.spinner("Buscando leads..."):
-            cliente = Cliente(industria, postores, producto, zona)
-            query = agente(cliente)
-            if query:
-                leads = buscador(query)
-                print(leads)
-                df = tabla(leads)
-                st.success("Clientes potenciales encontrados")
-                st.dataframe(df)
 
-                st.download_button(
-                    label="Descargar CSV",
-                    data=df.to_csv(index=False),
-                    file_name=f"leads_{cliente.industria}.csv",
-                    mime="text/csv"
-                )
+        with st.spinner("Recopilando información..."):
+            cliente = Cliente(industria, postores, producto, zona)
+
+            p4 = agente(cliente)
+            st.success("Clientes encontrados")
+            st.markdown(p4)
+
+        st.download_button(
+            label = "Descargar txt",
+            data = str(p4),
+            file_name = f"información_{cliente.industria}.txt",
+            mime = "text/plain"
+        )
     else:
         st.warning("Por favor completa todos los campos.")
 

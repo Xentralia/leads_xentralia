@@ -104,6 +104,25 @@ if usuario:
         )
 
 
+............................................................................
+            '''
+            query = agente(cliente)
+            if query:
+                leads = buscador(query)
+                print(leads)
+                df = tabla(leads)
+                st.success("Clientes potenciales encontrados")
+                st.dataframe(df)  
+
+                st.download_button(
+                    label="Descargar CSV",
+                    data=df.to_csv(index=False),
+                    file_name=f"leads_{cliente.industria}.csv",
+                    mime="text/csv"
+                )          
+            '''
+
+
 
 
 
