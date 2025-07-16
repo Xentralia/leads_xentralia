@@ -9,7 +9,7 @@ Lo que necesito es:
 2. Definir a qué tipo de clientes podría apuntar en {industria}, en {zona}.
 3. Generar una lista de prospectos REALES calificados en función de esa investigación y necesito que eso datos los cotejes con bases de datos píblicas como el SIEM 
     (Sistema de Información Empresrial Méxicano), Data México, INEGI DENUE, Cámara de comercio local, el Directorio INADEM/INAES y LinkedIn.
-4. Opcionalmente, SÓLO SI ENCUENTRAS EL CONTACTO DIRECTO DE LA PERSONA QUE PODRÍA CERRAR PROYECTOS Y ADQUIERIR MERCANCIA, definir una estrategia para contactarlos (LinkedIn, correo, llamadas, etc.).
+4. Opcionalmente, SÓLO SI ENCUENTRAS EL CONTACTO DIRECTO DE LA PERSONA QUE PODRÍA CERRAR PROYECTOS Y ADQUIERIR MERCANCIA, definir una estrategia para contactarlos dando prioridad a {prioridad}.
 
 Toda esa información la necesito como datos que se puedan poner en un documento de texto donde pueda ver claramente el medio de contacto,
 ya sea por telefono o correo electrónico, que ambos tienen que ser verídicos y ya verificados, además de una direacción
@@ -18,3 +18,7 @@ ponerme en contacto con las personas responsables lo más pronto posible. Agrega
 Además de una breve descripción de quienes son y a lo que se dedican.
 
 Algo importante es que no deberás agregar saludos, despedidas o resúmenes, solamente la información, no harás preguntas al inicio o al final.
+
+Después de desplegar la información agrega el siguiente texto:
+⚠️ Si recargas esta pestaña, se perderá toda la información obtenida. 
+⬇️ Te recomendamos descargar los resultados de tu búsqueda inteligente para conservar los prospectos identificados.

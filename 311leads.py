@@ -33,7 +33,7 @@ from utils.prompts import construir_prompt #Esto toma el archivo de prompts.py
 from serpapi import GoogleSearch
 
 # --------------------------- Seteadores ----------------------------------------------
-st.set_page_config(page_title = "X Leadflow V.π",
+st.set_page_config(page_title = "X Leadflow V.3.16.17",
                    page_icon = "📝",
                    layout="wide")
 
@@ -42,19 +42,20 @@ load_dotenv(dotenv_path, override=True)
 client = OpenAI(api_key = os.getenv("OPENAI_API_KEY"))
 explorador = os.getenv("SERPAPI_API_KEY")
 
-st.title("📝 Directorio de clientes potenciales")
+st.title("📝 Herramienta especializada en prospección de ventas a empresas, no a consumidores.")
 
 # ------------------------------ Estructuras -----------------------------------------
 class Cliente:
-    def __init__(self, industria, postores, producto, zona):
+    def __init__(self, industria, postores, producto, zona, prioridad):
         self.industria = industria
         self.postores = postores
         self.producto = producto
         self.zona = zona
+        self.prioridad = prioridad
 
 # --------------------------- Funciones -----------------------------------------------
 def instrucciones():
-    with codecs.open("data/instrucciones.txt", "r", encoding="utf-8") as f:
+    with codecs.open("data/instrucciones2.txt", "r", encoding="utf-8") as f:
         fi = f.read()
     file = fi.split('\n')
     for linea in file:
@@ -65,7 +66,7 @@ def agente(cliente):
     try:
         agente = client.responses.create(
             model = "gpt-4.1",
-            input = construir_prompt("data/promptD4.txt", datos)
+            input = construir_prompt("data/promptD5.txt", datos)
         )
         return agente.output_text
     except Exception as e:
@@ -148,21 +149,48 @@ def tabla(leads):
 st.markdown("## ¡Bienvenido!")
 instrucciones()
 
-st.sidebar.header("Ayudame proporcionandome esta información:")
+st.sidebar.markdown("# Encontremos a tus clientes ideales")
+st.sidebar.header("Completa estos datos clave:")
 
-industria = st.sidebar.selectbox("Industria:", ["Manufactura", "Alimenticia", "Automotriz", "Textil", "Tecnológica", "Otra"])
+industria = st.sidebar.selectbox("Industria principal:", 
+                                ["Agroindustria", "Alimentos", "Arquitectura", "Artes/Cultural", "Automotriz",
+                                 "Bebidas", "Bienes Raíces",
+                                 "Ciberseguridad", "Construcción", "Consultoría", "Contabilidad",
+                                 "Diseño", "Dispositivos Médicos",
+                                 "e-commerce", "e-learning", "Educación", "Energía", "Entretenimiento",
+                                 "Farmacéutica", "Finanzas", "Fintech", "Fitness/Wellness",
+                                 "Gobierno",
+                                 "Hardware Tecnológico", "Hospitales/Clínicas", "Hotelería",
+                                 "Industrial", "Inteligencia Artificial",
+                                 "Legal", "Logística",
+                                 "Manufactura", "Medios", "Moda",
+                                 "Nutrición",
+                                 "ONGs/Social", "Organismos Gubernamentales",
+                                 "Plásticos", "Publicidad/Marketing",
+                                 "Química",
+                                 "Recursos Humanos", "Retail/Comercio",
+                                 "Salud", "Seguros", "Software", "Suplementos",
+                                 "Tecnología", "Telecomunicaciones", "Textil", "Transporte", "Turismo",
+                                 "Videojuegos", "Otra"],
+                                index=None,
+                                placeholder="¿En qué sector operas?")
 if industria == "Otra":
-    industria = st.sidebar.text_input("Especifique la industria:")
+    industria = st.sidebar.text_input("Especifica:")
 
-postores = st.sidebar.text_input("¿A quiénes les vendes?")
-producto = st.sidebar.text_input("¿Qué vendes?")
-zona = st.sidebar.text_input("¿En qué zona buscas clientes?")
+postores = st.sidebar.text_input("Clientes ideales:", 
+                                 placeholder="¿Qué empresas o perfiles buscas?")
+producto = st.sidebar.text_input("Tu producto/servicio", 
+                                 placeholder="¿Qué ofreces específicamente?")
+zona = st.sidebar.text_input("Zona de cobertura", 
+                             placeholder="Estados, regiones, ciudades")
+prioridad = st.sidebar.text_input("¿Qué datos son más relevantes para ti?", 
+                                  placeholder="Correos, teléfonos, redes sociales")
 
 if st.sidebar.button("Aceptar"):
     if all([industria, postores, producto, zona]):
 
         with st.spinner("Recopilando información..."):
-            cliente = Cliente(industria, postores, producto, zona)
+            cliente = Cliente(industria, postores, producto, zona, prioridad)
 
             p4 = agente(cliente)
             st.success("Clientes encontrados")
@@ -176,4 +204,3 @@ if st.sidebar.button("Aceptar"):
         )
     else:
         st.warning("Por favor completa todos los campos.")
-
