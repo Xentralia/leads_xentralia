@@ -11,6 +11,7 @@
 # V.3.5.10 //20 06 2025//                         #
 # V.3.12.16 //02 07 2025//                        #
 # V.3.14.16 //10 07 2025//                        #
+# V.3.16.17 //16 07 2025//                        #
 # Desplegado con streamlit y render               #
 # Agente impulsado con OpenAI                     #
 # Desarrollador: Sergio Emiliano López Bautista   #
