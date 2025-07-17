@@ -75,7 +75,7 @@ def agente(cliente):
         st.error(f"Error al generar una respuesta: {str(e)}")
         return None
 
-def buscador(query, paginas=10):
+def buscador(query, paginas=10): #scraping
     organicos=[]
     try:
         for i in range(paginas):
@@ -176,6 +176,7 @@ industria = st.sidebar.selectbox("Industria principal:",
                                  "Videojuegos", "Otra"],
                                 index=None,
                                 placeholder="¿En qué sector operas?")
+
 if industria == "Otra":
     industria = st.sidebar.text_input("Especifica:")
 

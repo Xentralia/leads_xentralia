@@ -1,4 +1,4 @@
-Este es el contenido parcial de la página web de una empresa:
+Esta es la respuesra de un agente de IA que investigó oportunidades de negocio.
 
 {contenido}
 
