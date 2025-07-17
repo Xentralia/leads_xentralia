@@ -17,6 +17,7 @@
 # Desarrollador: Sergio Emiliano López Bautista   #
 # # # # # # # # # # # # # # # # # # # # # # # # # #
 
+
 # ------------------------- Requerimentos y librerías -------------------------------
 import io
 import os
@@ -34,7 +35,7 @@ from utils.prompts import construir_prompt #Esto toma el archivo de prompts.py
 from serpapi import GoogleSearch
 
 # --------------------------- Seteadores ----------------------------------------------
-st.set_page_config(page_title = "X Leadflow V.3.16.17",
+st.set_page_config(page_title = "X Leadflow V.3.16.18",
                    page_icon = "📝",
                    layout="wide")
 
@@ -187,21 +188,28 @@ zona = st.sidebar.text_input("Zona de cobertura",
 prioridad = st.sidebar.text_input("¿Qué datos son más relevantes para ti?", 
                                   placeholder="Correos, teléfonos, redes sociales")
 
-if st.sidebar.button("Aceptar"):
-    if all([industria, postores, producto, zona]):
+acuerdo = st.sidebar.checkbox("Confirmo que comprendo y acepto que los prospectos son generados automáticamente " \
+                      "por Inteligencia Artificial (IA) mediante análisis de fuentes públicas.  " \
+                      "La información debe ser verificada antes de ser utilizada, XentraliA no garantiza precisión ni disponibilidad de datos. " \
+                      "Me comprometo a cumplir con leyes aplicables de protección de datos.")
 
-        with st.spinner("Recopilando información..."):
-            cliente = Cliente(industria, postores, producto, zona, prioridad)
 
-            p4 = agente(cliente)
-            st.success("Clientes encontrados")
-            st.markdown(p4)
+if acuerdo:
+    if st.sidebar.button("🔍 Buscar Prospectos"):
+        if all([industria, postores, producto, zona]):
 
-        st.download_button(
-            label = "Descargar txt",
-            data = str(p4),
-            file_name = f"información_{cliente.industria}.txt",
-            mime = "text/plain"
-        )
-    else:
-        st.warning("Por favor completa todos los campos.")
+            with st.spinner("Recopilando información..."):
+                cliente = Cliente(industria, postores, producto, zona, prioridad)
+
+                p4 = agente(cliente)
+                st.success("Clientes encontrados")
+                st.markdown(p4)
+
+                st.download_button(
+                    label = "Descargar txt",
+                    data = str(p4),
+                    file_name = f"información_{cliente.industria}.txt",
+                    mime = "text/plain"
+                )
+        else:
+            st.sidebar.warning("Por favor completa todos los campos.")
