@@ -104,6 +104,99 @@ if usuario:
         )
 
 
+
+
+
+
+explorador = os.getenv("SERPAPI_API_KEY")
+def buscador(query, paginas=10): #scraping
+    organicos=[]
+    try:
+        for i in range(paginas):
+            params = {
+                "engine": "google",
+                "q": query,
+                "start": i*10,
+                "hl": "es",
+                "google_domain": "google.com.mx",
+                "api_key": explorador
+            }
+            search = GoogleSearch(params)
+            results = search.get_dict()
+            organicos += results.get("organic_results", [])
+            time.sleep(1)
+        return organicos
+    
+    except Exception as e:
+        st.error(f"No se pudo completar la busqueda: {str(e)}")
+        return None
+
+
+def enriquecer(link):
+    try:
+        if any(host in link for host in ["mercadolibre", "amazon", "youtube", "facebook"]):
+            return "Nombre: -\nTeléfono: -\nCorreo: -\nContacto: -"
+
+        response = requests.get(link, timeout=10)
+        soup = BeautifulSoup(response.text, "html.parser")
+        texto = soup.get_text()[:3000]
+
+        correos = re.findall(r"[\w\.-]+@[\w\.-]+\\.\w+", texto)
+        telefonos = re.findall(r"\+?\d[\d\s\-]{7,}\d", texto)
+        
+        textoD = {
+            "contenido": texto,
+            "emails": correos,
+            "telefonos": telefonos
+        }
+
+        completador = client.responses.create(
+            model = "gpt-4.1",
+            input = construir_prompt("data/promptD3.txt", textoD)
+        )
+        return completador.output_text
+
+    except Exception as e:
+        return f"Nombre: -\nTeléfono: -\nCorreo: -\nContacto: -"
+
+
+def tabla(leads):
+    tab = []
+    progreso = st.progress(0)
+
+    for i, r in enumerate(leads):
+        link = r.get("link", "")
+        rico = enriquecer(link)
+        datos = parsear(rico)
+        datos["Enlace"] = link
+        tab.append(datos)
+        progreso.progress((i + 1) / len(leads))
+
+    return pd.DataFrame(tab)
+
+def parsear(respuesta):
+    datos = {"Nombre": "", "Teléfono": "", "Correo": "", "Contacto": ""}
+    for linea in respuesta.split("\n"):
+        if ":" in linea:
+            clave, valor = linea.split(":", 1)
+            if clave.strip() in datos:
+                datos[clave.strip()] = valor.strip()
+    return datos
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ............................................................................
             '''
             query = agente(cliente)

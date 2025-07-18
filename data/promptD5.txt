@@ -9,6 +9,16 @@ Lo que necesito es:
 2. Definir a qué tipo de clientes podría apuntar en {industria}, en {zona}.
 3. Generar una lista de prospectos REALES calificados en función de esa investigación y necesito que esos datos los cotejes con bases de datos públicas como el SIEM 
     (Sistema de Información Empresrial Méxicano), Data México, INEGI DENUE, Cámara de comercio local, el Directorio INADEM/INAES y LinkedIn.
+    Usa el siguiente formato **repetido por cada lead**, separando cada uno con tres guiones (---):
+
+    Razón social: [Razón social o nombre del negocio]
+    Dirección: [La dirección física que sea provista]
+    Giro: [A qué se decia ese lugar]    
+    Nombre responsable: [La persona responsable]
+    Teléfono: [Teléfono del responsable y, si está disponible, la extensión]
+    Correo: [Correo del responsable]
+
+
 4. Opcionalmente, SÓLO SI ENCUENTRAS EL CONTACTO DIRECTO DE LA PERSONA QUE PODRÍA CERRAR PROYECTOS Y ADQUIRIR MERCANCIA, definir una estrategia para contactarlos dando prioridad a {prioridad}.
 
 Toda esa información la necesito como datos que se puedan poner en un documento de texto donde pueda ver claramente el medio de contacto,

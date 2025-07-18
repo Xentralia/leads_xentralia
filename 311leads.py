@@ -27,22 +27,20 @@ import codecs
 import requests
 import streamlit as st
 import pandas as pd
-import re
-from bs4 import BeautifulSoup
 from dotenv import load_dotenv, find_dotenv
 from openai import OpenAI
 from utils.prompts import construir_prompt #Esto toma el archivo de prompts.py
-from serpapi import GoogleSearch
+from agents import Agent, Runner
 
 # --------------------------- Seteadores ----------------------------------------------
-st.set_page_config(page_title = "X Leadflow V.3.16.18",
+st.set_page_config(page_title = "X Leadflow V.3.16.20",
                    page_icon = "📝",
                    layout="wide")
 
 dotenv_path = find_dotenv()
 load_dotenv(dotenv_path, override=True)
 client = OpenAI(api_key = os.getenv("OPENAI_API_KEY"))
-explorador = os.getenv("SERPAPI_API_KEY")
+denue_token = os.getenv("DENUE_TOKEN")
 
 st.title("📝 Herramienta especializada en prospección de ventas a empresas, no a consumidores.")
 
@@ -75,77 +73,23 @@ def agente(cliente):
         st.error(f"Error al generar una respuesta: {str(e)}")
         return None
 
-def buscador(query, paginas=10): #scraping
-    organicos=[]
-    try:
-        for i in range(paginas):
-            params = {
-                "engine": "google",
-                "q": query,
-                "start": i*10,
-                "hl": "es",
-                "google_domain": "google.com.mx",
-                "api_key": explorador
-            }
-            search = GoogleSearch(params)
-            results = search.get_dict()
-            organicos += results.get("organic_results", [])
-            time.sleep(1)
-        return organicos
-    
     except Exception as e:
-        st.error(f"No se pudo completar la busqueda: {str(e)}")
+        st.error(f"Algo alió mal. {str(e)}")
         return None
+    
+def parsear_leads(respuesta):
+    bloques = respuesta.strip().split("---")
+    leads = []
 
-def enriquecer(link):
-    try:
-        if any(host in link for host in ["mercadolibre", "amazon", "youtube", "facebook"]):
-            return "Nombre: -\nTeléfono: -\nCorreo: -\nContacto: -"
-
-        response = requests.get(link, timeout=10)
-        soup = BeautifulSoup(response.text, "html.parser")
-        texto = soup.get_text()[:3000]
-
-        correos = re.findall(r"[\w\.-]+@[\w\.-]+\\.\w+", texto)
-        telefonos = re.findall(r"\+?\d[\d\s\-]{7,}\d", texto)
-        
-        textoD = {
-            "contenido": texto,
-            "emails": correos,
-            "telefonos": telefonos
-        }
-
-        completador = client.responses.create(
-            model = "gpt-4.1",
-            input = construir_prompt("data/promptD3.txt", textoD)
-        )
-        return completador.output_text
-
-    except Exception as e:
-        return f"Nombre: -\nTeléfono: -\nCorreo: -\nContacto: -"
-
-def parsear(respuesta):
-    datos = {"Nombre": "", "Teléfono": "", "Correo": "", "Contacto": ""}
-    for linea in respuesta.split("\n"):
-        if ":" in linea:
-            clave, valor = linea.split(":", 1)
-            if clave.strip() in datos:
-                datos[clave.strip()] = valor.strip()
-    return datos
-
-def tabla(leads):
-    tab = []
-    progreso = st.progress(0)
-
-    for i, r in enumerate(leads):
-        link = r.get("link", "")
-        rico = enriquecer(link)
-        datos = parsear(rico)
-        datos["Enlace"] = link
-        tab.append(datos)
-        progreso.progress((i + 1) / len(leads))
-
-    return pd.DataFrame(tab)
+    for bloque in bloques:
+        lead = {}
+        for linea in bloque.strip().split("\n"):
+            if ":" in linea:
+                clave, valor = linea.split(":", 1)
+                lead[clave.strip()] = valor.strip()
+        if lead:
+            leads.append(lead)
+    return leads
 
 # -------------------------------- Interfaz (MAIN)-----------------------------------------
 st.markdown("## ¡Bienvenido!")
@@ -206,8 +150,19 @@ if acuerdo:
                 st.success("Clientes encontrados")
                 st.markdown(p4)
 
+                leads = parsear_leads(p4)
+                df = pd.DataFrame(leads)
+                csv_completo=df.to_csv(index=False)
+
                 st.download_button(
-                    label = "Descargar txt",
+                    label="Sólo leads en CSV",
+                    data= csv_completo,
+                    file_name="leads_CSV.csv",
+                    mime="text/csv"
+                )
+
+                st.download_button(
+                    label = "Info completa",
                     data = str(p4),
                     file_name = f"información_{cliente.industria}.txt",
                     mime = "text/plain"
