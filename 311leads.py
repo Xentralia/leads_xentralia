@@ -30,7 +30,7 @@ import pandas as pd
 from dotenv import load_dotenv, find_dotenv
 from openai import OpenAI
 from utils.prompts import construir_prompt #Esto toma el archivo de prompts.py
-from agents import Agent, Runner
+#from agents import Agent, Runner
 
 # --------------------------- Seteadores ----------------------------------------------
 st.set_page_config(page_title = "X Leadflow V.3.16.20",
@@ -154,18 +154,21 @@ if acuerdo:
                 df = pd.DataFrame(leads)
                 csv_completo=df.to_csv(index=False)
 
-                st.download_button(
-                    label="Sólo leads en CSV",
-                    data= csv_completo,
-                    file_name="leads_CSV.csv",
-                    mime="text/csv"
-                )
 
-                st.download_button(
-                    label = "Info completa",
-                    data = str(p4),
-                    file_name = f"información_{cliente.industria}.txt",
-                    mime = "text/plain"
-                )
+                iz, der = st.columns([1,1], gap="small")
+                with iz:
+                    st.download_button(
+                        label = "Info completa",
+                        data = str(p4),
+                        file_name = f"información_{cliente.industria}.txt",
+                        mime = "text/plain"
+                    )
+                with der:
+                    st.download_button(
+                        label="Sólo leads en CSV",
+                        data= csv_completo,
+                        file_name="leads_CSV.csv",
+                        mime="text/csv"
+                    )
         else:
             st.sidebar.warning("Por favor completa todos los campos.")
