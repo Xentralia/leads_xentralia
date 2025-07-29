@@ -28,7 +28,7 @@ import requests
 import streamlit as st
 import pandas as pd
 import asyncio
-from agents import Agent, Runner
+#from agents import Agent, Runner
 from dotenv import load_dotenv, find_dotenv
 from openai import OpenAI
 from utils.prompts import construir_prompt #Esto toma el archivo de prompts.py
@@ -70,13 +70,6 @@ def buscar_denue(palabra, lat, lon, radio, token):
     else:
         print(f"Error {response.status_code}: No se pudo consultar la API")
         return None
-
-#agente_chief = Agent(name="Root",
-              #instructions="Tu tarea es usar la herramienta de busqueda para hacer scraping estableciendo un punto medio y obteniendo las coordenadas de ese punto, formando un radio de busqueda donde alcance a al menos 100 resultados",
-              #tools=[buscar_denue])
-#async def root_agent(cliente):
-    #respuesta = await Runner.run(agente_chief, f"Usa {cliente.industria}, {cliente.postores}, {cliente.zona} y {cliente.producto} para hacer tu tarea")
-    #st.markdown(respuesta.final_output)
 
 def instrucciones():
     with codecs.open("data/instrucciones2.txt", "r", encoding="utf-8") as f:
