@@ -56,8 +56,8 @@ class Cliente:
         self.zona = zona
         self.prioridad = prioridad
 
-agente_buscador = Agent(name="buscador",
-                        instructions="Tu tarea es delegar a otros agentes ")
+#agente_buscador = Agent(name="buscador",
+                        #instructions="Tu tarea es delegar a otros agentes ")
 # --------------------------- Funciones -----------------------------------------------
 def buscar_denue(palabra, lat, lon, radio, token):
     url = f"https://www.inegi.org.mx/app/api/denue/v1/consulta/buscar/{palabra}/{lat},{lon}/{radio}/{token}"
