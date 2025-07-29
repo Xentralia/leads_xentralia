@@ -27,6 +27,8 @@ import codecs
 import requests
 import streamlit as st
 import pandas as pd
+import asyncio
+from agents import Agent, Runner
 from dotenv import load_dotenv, find_dotenv
 from openai import OpenAI
 from utils.prompts import construir_prompt #Esto toma el archivo de prompts.py
@@ -46,14 +48,36 @@ st.title("📝 Herramienta especializada en prospección de ventas a empresas, n
 
 # ------------------------------ Estructuras -----------------------------------------
 class Cliente:
-    def __init__(self, industria, postores, producto, zona, prioridad):
+    def __init__(self, industria, postores, producto, zona, prioridad, tamanio):
         self.industria = industria
+        self.tamanio = tamanio
         self.postores = postores
         self.producto = producto
         self.zona = zona
         self.prioridad = prioridad
 
+agente_buscador = Agent(name="buscador",
+                        instructions="Tu tarea es delegar a otros agentes ")
 # --------------------------- Funciones -----------------------------------------------
+def buscar_denue(palabra, lat, lon, radio, token):
+    url = f"https://www.inegi.org.mx/app/api/denue/v1/consulta/buscar/{palabra}/{lat},{lon}/{radio}/{token}"
+    response = requests.get(url)
+    print(url)
+    if response.status_code == 200:
+        data = response.json()
+        df = pd.DataFrame(data)
+        return df
+    else:
+        print(f"Error {response.status_code}: No se pudo consultar la API")
+        return None
+
+#agente_chief = Agent(name="Root",
+              #instructions="Tu tarea es usar la herramienta de busqueda para hacer scraping estableciendo un punto medio y obteniendo las coordenadas de ese punto, formando un radio de busqueda donde alcance a al menos 100 resultados",
+              #tools=[buscar_denue])
+#async def root_agent(cliente):
+    #respuesta = await Runner.run(agente_chief, f"Usa {cliente.industria}, {cliente.postores}, {cliente.zona} y {cliente.producto} para hacer tu tarea")
+    #st.markdown(respuesta.final_output)
+
 def instrucciones():
     with codecs.open("data/instrucciones2.txt", "r", encoding="utf-8") as f:
         fi = f.read()
@@ -66,7 +90,7 @@ def agente(cliente):
     try:
         agente = client.responses.create(
             model = "gpt-4.1",
-            input = construir_prompt("data/promptD5.txt", datos)
+            input = construir_prompt("data/promptD6.txt", datos)
         )
         return agente.output_text
     except Exception as e:
@@ -130,8 +154,9 @@ producto = st.sidebar.text_input("Tu producto/servicio",
                                  placeholder="¿Qué ofreces específicamente?")
 zona = st.sidebar.text_input("Zona de cobertura", 
                              placeholder="Estados, regiones, ciudades")
-prioridad = st.sidebar.text_input("¿Qué datos son más relevantes para ti?", 
-                                  placeholder="Correos, teléfonos, redes sociales")
+prioridad = st.sidebar.pills("¿Qué datos son relevantes para ti?", ["Correos", "Telefonos", "Redes sociales"], selection_mode="multi")
+
+tamanio = st.sidebar.pills("Tamaño del cliente", ["Pequeño", "Mediano", "Grande"], selection_mode="multi")
 
 acuerdo = st.sidebar.checkbox("Confirmo que comprendo y acepto que los prospectos son generados automáticamente " \
                       "por Inteligencia Artificial (IA) mediante análisis de fuentes públicas.  " \
@@ -144,7 +169,7 @@ if acuerdo:
         if all([industria, postores, producto, zona]):
 
             with st.spinner("Recopilando información..."):
-                cliente = Cliente(industria, postores, producto, zona, prioridad)
+                cliente = Cliente(industria, postores, producto, zona, prioridad, tamanio)
 
                 p4 = agente(cliente)
                 st.success("Clientes encontrados")
@@ -154,6 +179,7 @@ if acuerdo:
                 df = pd.DataFrame(leads)
                 csv_completo=df.to_csv(index=False)
 
+                #asyncio.run(root_agent(cliente)) 
 
                 iz, der = st.columns([1,1], gap="small")
                 with iz:

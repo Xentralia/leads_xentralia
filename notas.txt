@@ -286,3 +286,7 @@ Textil
 Transporte
 Turismo
 Videojuegos
+
+
+[{'zona': 'Tlahuac', 'lat': 19.2703914, 'lon': -99.0047499}, {'zona': 'Gustavo A. Madero', 'lat': 19.4827949, 'lon': -99.1133606}]
+[{'zona': 'Tlahuac', 'lat': 19.2703914, 'lon': -99.0047499}, {'zona': 'Gustavo A. Madero', 'lat': 19.4827949, 'lon': -99.1133606}, {'zona': 'Peninsula de Yucatan', 'lat': 18.8016859, 'lon': -89.7426971}]
