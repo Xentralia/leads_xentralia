@@ -189,7 +189,12 @@ def parsear(respuesta):
 
 
 
-
+#agente_chief = Agent(name="Root",
+              #instructions="Tu tarea es usar la herramienta de busqueda para hacer scraping estableciendo un punto medio y obteniendo las coordenadas de ese punto, formando un radio de busqueda donde alcance a al menos 100 resultados",
+              #tools=[buscar_denue])
+#async def root_agent(cliente):
+    #respuesta = await Runner.run(agente_chief, f"Usa {cliente.industria}, {cliente.postores}, {cliente.zona} y {cliente.producto} para hacer tu tarea")
+    #st.markdown(respuesta.final_output)
 
 
 
@@ -286,3 +291,7 @@ Textil
 Transporte
 Turismo
 Videojuegos
+
+
+[{'zona': 'Tlahuac', 'lat': 19.2703914, 'lon': -99.0047499}, {'zona': 'Gustavo A. Madero', 'lat': 19.4827949, 'lon': -99.1133606}]
+[{'zona': 'Tlahuac', 'lat': 19.2703914, 'lon': -99.0047499}, {'zona': 'Gustavo A. Madero', 'lat': 19.4827949, 'lon': -99.1133606}, {'zona': 'Peninsula de Yucatan', 'lat': 18.8016859, 'lon': -89.7426971}]
