@@ -54,10 +54,11 @@ class Cliente:
         self.postores = postores
         self.producto = producto
         self.zona = zona
-        self.prioridad = prioridad
+        #self.prioridad = prioridad
 
 #agente_buscador = Agent(name="buscador",
                         #instructions="Tu tarea es delegar a otros agentes ")
+
 # --------------------------- Funciones -----------------------------------------------
 def buscar_denue(palabra, lat, lon, radio, token):
     url = f"https://www.inegi.org.mx/app/api/denue/v1/consulta/buscar/{palabra}/{lat},{lon}/{radio}/{token}"
@@ -147,7 +148,7 @@ producto = st.sidebar.text_input("Tu producto/servicio",
                                  placeholder="¿Qué ofreces específicamente?")
 zona = st.sidebar.text_input("Zona de cobertura", 
                              placeholder="Estados, regiones, ciudades")
-prioridad = st.sidebar.pills("¿Qué datos son relevantes para ti?", ["Correos", "Telefonos", "Redes sociales"], selection_mode="multi")
+#prioridad = st.sidebar.pills("¿Qué datos son relevantes para ti?", ["Correos", "Telefonos", "Redes sociales"], selection_mode="multi")
 
 tamanio = st.sidebar.pills("Tamaño del cliente", ["Pequeño", "Mediano", "Grande"], selection_mode="multi")
 
@@ -162,7 +163,7 @@ if acuerdo:
         if all([industria, postores, producto, zona]):
 
             with st.spinner("Recopilando información..."):
-                cliente = Cliente(industria, postores, producto, zona, prioridad, tamanio)
+                cliente = Cliente(industria, postores, producto, zona, tamanio)
 
                 p4 = agente(cliente)
                 st.success("Clientes encontrados")
