@@ -48,13 +48,12 @@ st.title("📝 Herramienta especializada en prospección de ventas a empresas, n
 
 # ------------------------------ Estructuras -----------------------------------------
 class Cliente:
-    def __init__(self, industria, postores, producto, zona, prioridad, tamanio):
-        self.industria = industria
-        self.tamanio = tamanio
+    def __init__(self, industria, postores, producto, zona, tamanio):
+        self.industria = industria        
         self.postores = postores
         self.producto = producto
         self.zona = zona
-        #self.prioridad = prioridad
+        self.tamanio = tamanio
 
 #agente_buscador = Agent(name="buscador",
                         #instructions="Tu tarea es delegar a otros agentes ")
@@ -160,7 +159,7 @@ acuerdo = st.sidebar.checkbox("Confirmo que comprendo y acepto que los prospecto
 
 if acuerdo:
     if st.sidebar.button("🔍 Buscar Prospectos"):
-        if all([industria, postores, producto, zona]):
+        if all([industria, postores, producto, zona, tamanio]):
 
             with st.spinner("Recopilando información..."):
                 cliente = Cliente(industria, postores, producto, zona, tamanio)
