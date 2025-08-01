@@ -23,6 +23,9 @@ Lo que necesito es:
    
 5. Definir una estrategia para contactarlos dando prioridad a correos, teléfonos de contacto y redes sociales en caso de encontrarlas.
 
+6. Un punto muy importante es que no me muestres a quienes podrían ser (o son) mis competidores, solamente a quienes pueden ser mis clientes. En otras palabras, no me muestres a quienes
+   también producen lo que yo produzco, sino a quienes necesitan o podrían consumir lo que produzco.
+
 Toda esa información la necesito como datos que se puedan poner en un documento de texto donde pueda ver claramente el medio de contacto,
 dando su lugar a la forma más eficiante de contacto, que debe ser verídico y ya verificado, además de una dirección en caso de que los leads tengan algún lugar físico para visitar, para poder 
 ponerme en contacto con las personas responsables lo más pronto posible. Agrega también el nombre de quienes puedan arrancar o cerrar proyectos.
