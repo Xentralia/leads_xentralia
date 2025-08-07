@@ -28,14 +28,13 @@ import requests
 import streamlit as st
 import pandas as pd
 import asyncio
-#from agents import Agent, Runner
+from agents import Agent, Runner
 from dotenv import load_dotenv, find_dotenv
 from openai import OpenAI
 from utils.prompts import construir_prompt #Esto toma el archivo de prompts.py
-#from agents import Agent, Runner
 
 # --------------------------- Seteadores ----------------------------------------------
-st.set_page_config(page_title = "X Leadflow V.3.16.20",
+st.set_page_config(page_title = "X Leadflow V.4.0.0",
                    page_icon = "📝",
                    layout="wide")
 
@@ -83,7 +82,8 @@ def agente(cliente):
     try:
         agente = client.responses.create(
             model = "gpt-4.1",
-            input = construir_prompt("data/promptD6.txt", datos)
+            #tools=[{"type": "web_search_preview"}],
+            input = "Qué hora es en este momento en CDMX, Tokio, Beijing, Diblín, Seúl, Madrid y Londres?"
         )
         return agente.output_text
     except Exception as e:
