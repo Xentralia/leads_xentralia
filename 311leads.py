@@ -82,8 +82,8 @@ def agente(cliente):
     try:
         agente = client.responses.create(
             model = "gpt-4.1",
-            #tools=[{"type": "web_search_preview"}],
-            input = "Qué hora es en este momento en CDMX, Tokio, Beijing, Diblín, Seúl, Madrid y Londres?"
+            tools=[{"type": "web_search_preview"}],
+            input = construir_prompt("data/promptD6.txt", datos)
         )
         return agente.output_text
     except Exception as e:
